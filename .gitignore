@@ -18,3 +18,9 @@ web-build/
 
 # IDE
 .idea/
+
+# Development
+.env
+.env.production
+.env.local
+.env.development

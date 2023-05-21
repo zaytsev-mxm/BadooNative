@@ -4,6 +4,7 @@ import {
     Button,
     FlatList,
     ListRenderItemInfo,
+    StyleSheet,
     Text,
     View,
 } from 'react-native';
@@ -11,23 +12,18 @@ import { useRoute } from '@react-navigation/native';
 import { Person } from '@appTypes/person';
 import { ChatScreenRouteProp } from '@appTypes/router';
 import TextField from '@components/TextField';
-
-type HistoryEntry = {
-    author: 'human' | 'bot';
-    message: string;
-    time: Date;
-};
+import ChatMessage from '@components/ChatMessage';
+import { HistoryEntry } from '@appTypes/chat';
+import { OPEN_AI_API_KEY } from '@env';
 
 type Props = {
     person?: Person;
 };
 
-const API_KEY = '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';
-
 const OPTIONS = {
     method: 'POST',
     headers: {
-        Authorization: `Bearer ${API_KEY}`,
+        Authorization: `Bearer ${OPEN_AI_API_KEY}`,
         'Content-Type': 'application/json',
     },
 };
@@ -49,17 +45,20 @@ const ChatScreen: FC<Props> = ({ person }) => {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log('data: ', data.choices[0].message);
-                setHistory((currentHistory) => {
-                    return [
-                        ...currentHistory,
-                        {
-                            author: 'bot',
-                            message: data.choices[0].message.content,
-                            time: new Date(),
-                        },
-                    ];
-                });
+                console.log('data: ', JSON.stringify(data));
+                const answer = data?.choices?.[0]?.message?.content || '';
+                if (answer) {
+                    setHistory((currentHistory) => {
+                        return [
+                            ...currentHistory,
+                            {
+                                author: 'bot',
+                                message: answer,
+                                time: new Date(),
+                            },
+                        ];
+                    });
+                }
             })
             .catch((err) => console.error(err));
     };
@@ -93,22 +92,24 @@ const ChatScreen: FC<Props> = ({ person }) => {
     const renderChatMessage = (
         historyEntry: ListRenderItemInfo<HistoryEntry>
     ) => {
-        return (
-            <View>
-                <Text>From {historyEntry.item.author}:</Text>
-                <Text>{historyEntry.item.message}</Text>
-                <Text>({historyEntry.item.time.toLocaleDateString()})</Text>
-            </View>
-        );
+        return <ChatMessage historyEntry={historyEntry.item} />;
+    };
+
+    const keyExtractor = (historyEntry: HistoryEntry) => {
+        return String(historyEntry.time.toLocaleTimeString());
     };
 
     return (
-        <View>
+        <View style={styles.root}>
             <View>
                 <Text>Hello, I am {route?.params?.person?.name?.first}!</Text>
             </View>
             <View>
-                <FlatList data={history} renderItem={renderChatMessage} />
+                <FlatList
+                    data={history}
+                    renderItem={renderChatMessage}
+                    keyExtractor={keyExtractor}
+                />
             </View>
             <View>
                 <TextField
@@ -121,5 +122,28 @@ const ChatScreen: FC<Props> = ({ person }) => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    root: {
+        backgroundColor: 'white',
+        padding: 20,
+        height: '100%',
+    },
+    greetings: {
+        borderWidth: 1,
+        borderColor: 'black',
+        padding: 10,
+    },
+    messages: {
+        borderWidth: 1,
+        borderColor: 'black',
+        padding: 10,
+    },
+    form: {
+        borderWidth: 1,
+        borderColor: 'black',
+        padding: 10,
+    },
+});
 
 export default ChatScreen;
