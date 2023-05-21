@@ -53,19 +53,23 @@ const HomeScreen = () => {
 
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
-            <TextField
-                nativeID="email"
-                onChangeText={handleInputEmail}
-                value={email}
-                placeholder="Email"
-            />
-            <TextField
-                secureTextEntry={true}
-                nativeID="password"
-                onChangeText={handleInputPassword}
-                value={password}
-                placeholder="Passowrd"
-            />
+            <View style={styles.field}>
+                <TextField
+                    nativeID="email"
+                    onChangeText={handleInputEmail}
+                    value={email}
+                    placeholder="Email"
+                />
+            </View>
+            <View style={styles.field}>
+                <TextField
+                    secureTextEntry={true}
+                    nativeID="password"
+                    onChangeText={handleInputPassword}
+                    value={password}
+                    placeholder="Passowrd"
+                />
+            </View>
             <View style={styles.button}>
                 <Button
                     title="Login"
@@ -91,6 +95,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    field: {
+        display: 'flex',
+        alignItems: 'stretch',
+        width: '90%',
     },
     button: {
         paddingTop: 10,

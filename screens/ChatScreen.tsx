@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useRef } from 'react';
 import {
     Alert,
     Button,
@@ -28,6 +28,28 @@ const ChatScreen: FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [prompt, setPrompt] = useState('');
     const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const flatListRef = useRef<FlatList<any>>(null);
+
+    const updateMessages = (
+        message: string,
+        author: HistoryEntry['author']
+    ) => {
+        setHistory((currentHistory) => {
+            return [
+                ...currentHistory,
+                {
+                    author: author,
+                    message: message,
+                    time: new Date(),
+                },
+            ];
+        });
+        try {
+            flatListRef?.current?.scrollToEnd();
+        } catch (_err) {
+            // mute it for now
+        }
+    };
 
     const sendRequest = (message: string) => {
         return fetch('https://api.openai.com/v1/chat/completions', {
@@ -43,16 +65,7 @@ const ChatScreen: FC = () => {
                 console.log('data: ', JSON.stringify(data));
                 const answer = data?.choices?.[0]?.message?.content || '';
                 if (answer) {
-                    setHistory((currentHistory) => {
-                        return [
-                            ...currentHistory,
-                            {
-                                author: 'bot',
-                                message: answer,
-                                time: new Date(),
-                            },
-                        ];
-                    });
+                    updateMessages(answer, 'bot');
                 }
             })
             .catch((err) => console.error(err));
@@ -68,16 +81,7 @@ const ChatScreen: FC = () => {
         } else {
             setIsLoading(true);
             setPrompt('');
-            setHistory((currentHistory) => {
-                return [
-                    ...currentHistory,
-                    {
-                        author: 'human',
-                        message: prompt,
-                        time: new Date(),
-                    },
-                ];
-            });
+            updateMessages(prompt, 'human');
             sendRequest(prompt).finally(() => {
                 setIsLoading(false);
             });
@@ -103,6 +107,7 @@ const ChatScreen: FC = () => {
             </View>
             <View style={styles.messages}>
                 <FlatList
+                    ref={flatListRef}
                     data={history}
                     renderItem={renderChatMessage}
                     keyExtractor={keyExtractor}
