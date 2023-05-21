@@ -22,7 +22,7 @@ type Props = {
     person?: Person;
 };
 
-const API_KEY = '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';
+const API_KEY = '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';
 
 const OPTIONS = {
     method: 'POST',
