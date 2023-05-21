@@ -29,6 +29,10 @@ const PersonsList: FC<Props> = (props) => {
         setChosenPerson(undefined);
     };
 
+    const handleChatOpen = () => {
+        setChosenPerson(undefined);
+    };
+
     const renderItem = (person: ListRenderItemInfo<Person>) => {
         return (
             <PersonThumbnail
@@ -37,7 +41,7 @@ const PersonsList: FC<Props> = (props) => {
                 age={String(person.item.dob?.age)}
                 location={person.item.location?.city || ''}
                 isOnline={Boolean(person.item.online)}
-                onPress={handlePress(person.item)}
+                onPersonSelect={handlePress(person.item)}
             />
         );
     };
@@ -50,7 +54,11 @@ const PersonsList: FC<Props> = (props) => {
         if (chosenPerson) {
             return (
                 <Modal animationType="slide" transparent={true}>
-                    <PersonCard person={chosenPerson} onPress={handleClose} />
+                    <PersonCard
+                        person={chosenPerson}
+                        onClose={handleClose}
+                        onChatOpen={handleChatOpen}
+                    />
                 </Modal>
             );
         }

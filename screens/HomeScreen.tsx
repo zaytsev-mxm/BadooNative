@@ -6,21 +6,15 @@ import {
     View,
     Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 
 import TextField from '@components/TextField';
 
-import { HomeScreenNavigationProp } from '@appTypes/router';
-
-import { RouteNames } from '@constants/route-names';
 import { signInUser, signUpUser } from '@utils/firebase';
 
 const HomeScreen = () => {
-    const navigation = useNavigation<HomeScreenNavigationProp>();
-
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('test@test.com');
+    const [password, setPassword] = useState('testtest');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleInputEmail = (value: string) => {
@@ -29,10 +23,6 @@ const HomeScreen = () => {
 
     const handleInputPassword = (value: string) => {
         setPassword(value);
-    };
-
-    const handlePress = () => {
-        navigation.navigate(RouteNames.PROFILE, { id: '42' });
     };
 
     const handleSignup = async () => {

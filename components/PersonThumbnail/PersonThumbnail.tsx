@@ -16,15 +16,15 @@ type Props = {
     age: string;
     location: string;
     isOnline: boolean;
-    onPress: (props: PressableProps) => void;
+    onPersonSelect: (props: PressableProps) => void;
 };
 
 const { height, width } = Dimensions.get('window');
 
 const PersonThumbnail: FC<Props> = (props) => {
-    const { picture, name, age, location, isOnline, onPress } = props;
+    const { picture, name, age, location, isOnline, onPersonSelect } = props;
     return (
-        <Pressable onPress={onPress}>
+        <Pressable onPress={onPersonSelect}>
             <View style={[styles.root, { width: (width - 80) / 2 }]}>
                 <View style={styles.picture}>
                     <Image source={{ uri: picture }} style={styles.image} />

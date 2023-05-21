@@ -2,16 +2,19 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 
 import { RouteNames } from '@constants/route-names';
+import { Person } from '@appTypes/person';
 
 export type StackNavigatorParamList = {
     [RouteNames.HOME]: undefined;
-    [RouteNames.PROFILE]:
+    [RouteNames.PNB]: undefined;
+    [RouteNames.CHAT]?:
         | {
-              id?: string;
+              person?: Person;
           }
         | undefined;
-    [RouteNames.PNB]: undefined;
 };
+
+export type NavigationProp = NativeStackNavigationProp<StackNavigatorParamList>;
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
     StackNavigatorParamList,
@@ -19,16 +22,7 @@ export type HomeScreenNavigationProp = NativeStackNavigationProp<
 >;
 export type HomeScreenRouteProp = RouteProp<
     StackNavigatorParamList,
-    RouteNames.PROFILE
->;
-
-export type ProfileScreenNavigationProp = NativeStackNavigationProp<
-    StackNavigatorParamList,
-    RouteNames.PROFILE
->;
-export type ProfileScreenRouteProp = RouteProp<
-    StackNavigatorParamList,
-    RouteNames.PROFILE
+    RouteNames.HOME
 >;
 
 export type PnbScreenNavigationProp = NativeStackNavigationProp<
@@ -38,4 +32,13 @@ export type PnbScreenNavigationProp = NativeStackNavigationProp<
 export type PnbScreenRouteProp = RouteProp<
     StackNavigatorParamList,
     RouteNames.PNB
+>;
+
+export type ChatScreenNavigationProp = NativeStackNavigationProp<
+    StackNavigatorParamList,
+    RouteNames.CHAT
+>;
+export type ChatScreenRouteProp = RouteProp<
+    StackNavigatorParamList,
+    RouteNames.CHAT
 >;

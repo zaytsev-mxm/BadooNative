@@ -1,17 +1,28 @@
 import { FC } from 'react';
 import { GestureResponderEvent, Pressable } from 'react-native';
 import { Person } from '@appTypes/person';
-import { Image, Text, View, ScrollView } from 'react-native';
+import { Image, Text, View, ScrollView, Button } from 'react-native';
 
 import styles from './styles';
 import PersonDetails from '@components/PersonDetails';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProp } from '@appTypes/router';
+import { RouteNames } from '@constants/route-names';
 
 type Props = {
     person: Person;
-    onPress: (event: GestureResponderEvent) => void;
+    onClose: (event: GestureResponderEvent) => void;
+    onChatOpen: () => void;
 };
 
-const PersonCard: FC<Props> = ({ person, onPress }) => {
+const PersonCard: FC<Props> = ({ person, onClose, onChatOpen }) => {
+    const navigation = useNavigation<NavigationProp>();
+
+    const handlePressOpenChat = () => {
+        navigation.navigate(RouteNames.CHAT, { person });
+        onChatOpen();
+    };
+
     return (
         <View style={styles.root}>
             <View style={styles.topBlock}>
@@ -20,7 +31,7 @@ const PersonCard: FC<Props> = ({ person, onPress }) => {
                 </Text>
             </View>
             <View style={styles.closeWrapper}>
-                <Pressable onPress={onPress}>
+                <Pressable onPress={onClose}>
                     <View style={styles.close}>
                         <Text style={styles.closeText}>❌</Text>
                     </View>
@@ -47,6 +58,9 @@ const PersonCard: FC<Props> = ({ person, onPress }) => {
                     text={'Swimming, Bikes, Art'}
                 />
             </ScrollView>
+            <View style={styles.openChat}>
+                <Button title="Open chat" onPress={handlePressOpenChat} />
+            </View>
         </View>
     );
 };

@@ -65,6 +65,11 @@ const styles = StyleSheet.create({
     closeText: {
         fontSize: 12,
     },
+    openChat: {
+        position: 'absolute',
+        bottom: 50,
+        right: 50,
+    },
 });
 
 export default styles;

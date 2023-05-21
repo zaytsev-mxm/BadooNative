@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import { auth } from '@utils/firebase';
 import { useNavigation } from '@react-navigation/native';
-import { HomeScreenNavigationProp } from '@appTypes/router';
+import { NavigationProp } from '@appTypes/router';
 import { RouteNames } from '@constants/route-names';
 import firebase from 'firebase/compat';
 
 export const useAuthWatcher = () => {
-    const navigation = useNavigation<HomeScreenNavigationProp>();
+    const navigation = useNavigation<NavigationProp>();
 
     const [currentUser, setCurrentUser] =
         useState<Partial<firebase.User> | null>(null);
 
     useEffect(() => {
-        const unsubscibe = auth.onAuthStateChanged((user) => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
             setCurrentUser(user);
 
-            if (user?.email) {
+            if (user) {
                 navigation.navigate(RouteNames.PNB);
             } else {
                 navigation.navigate(RouteNames.HOME);
@@ -23,7 +23,7 @@ export const useAuthWatcher = () => {
         });
 
         return () => {
-            unsubscibe();
+            unsubscribe();
         };
     }, []);
 
