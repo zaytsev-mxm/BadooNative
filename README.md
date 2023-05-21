@@ -6,6 +6,15 @@ This is a kind of pet project where I am trying to get into React Native.
 
 If you want to see a live demo – see this [video] or you can install this [apk] on your Android phone as well.
 
+## How to use
+To log in you can either register as a new user, or simply use login "test@test.com" and password "testtest"
+
+## TODO
+
+- Fix navigation issues (at the moment a logged in user can get to the Login screen and get stuck there)
+- Store the history of user's interactions in Firebase
+- Add more nice-looking custom UI components
+
 ## Technologies and Techniques Used
 
 - React Native (with Expo)
