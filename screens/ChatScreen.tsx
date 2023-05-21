@@ -16,10 +16,6 @@ import ChatMessage from '@components/ChatMessage';
 import { HistoryEntry } from '@appTypes/chat';
 import { OPEN_AI_API_KEY } from '@env';
 
-type Props = {
-    person?: Person;
-};
-
 const OPTIONS = {
     method: 'POST',
     headers: {
@@ -28,7 +24,7 @@ const OPTIONS = {
     },
 };
 
-const ChatScreen: FC<Props> = ({ person }) => {
+const ChatScreen: FC = () => {
     const route = useRoute<ChatScreenRouteProp>();
     const [isLoading, setIsLoading] = useState(false);
     const [prompt, setPrompt] = useState('');
