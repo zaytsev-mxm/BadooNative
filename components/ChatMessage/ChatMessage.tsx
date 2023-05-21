@@ -11,10 +11,29 @@ type Props = {
 
 const ChatMessage: FC<Props> = ({ historyEntry }) => {
     return (
-        <View style={styles.root}>
-            <Text>From {historyEntry.author}:</Text>
-            <Text>{historyEntry.message}</Text>
-            <Text>({historyEntry.time.toLocaleDateString()})</Text>
+        <View
+            style={[
+                styles.root,
+                historyEntry.author === 'bot'
+                    ? styles.botRoot
+                    : styles.humanRoot,
+            ]}
+        >
+            <View
+                style={[
+                    styles.content,
+                    historyEntry.author === 'bot'
+                        ? styles.botContent
+                        : styles.humanContent,
+                ]}
+            >
+                <Text style={[styles.text, styles.textMessage]}>
+                    {historyEntry.message}
+                </Text>
+                <Text style={[styles.text, styles.textDate]}>
+                    ({historyEntry.time.toLocaleTimeString()})
+                </Text>
+            </View>
         </View>
     );
 };

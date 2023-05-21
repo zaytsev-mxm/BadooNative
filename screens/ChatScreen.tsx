@@ -9,7 +9,6 @@ import {
     View,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { Person } from '@appTypes/person';
 import { ChatScreenRouteProp } from '@appTypes/router';
 import TextField from '@components/TextField';
 import ChatMessage from '@components/ChatMessage';
@@ -97,24 +96,30 @@ const ChatScreen: FC = () => {
 
     return (
         <View style={styles.root}>
-            <View>
-                <Text>Hello, I am {route?.params?.person?.name?.first}!</Text>
+            <View style={styles.greetings}>
+                <Text style={styles.greetingsText}>
+                    Hello, I am {route?.params?.person?.name?.first}!
+                </Text>
             </View>
-            <View>
+            <View style={styles.messages}>
                 <FlatList
                     data={history}
                     renderItem={renderChatMessage}
                     keyExtractor={keyExtractor}
                 />
             </View>
-            <View>
+            <View style={styles.form}>
                 <TextField
                     nativeID="prompt"
                     onChangeText={handleChangeText}
                     value={prompt}
                 />
+                <Button
+                    title="Send"
+                    onPress={handlePress}
+                    disabled={isLoading}
+                />
             </View>
-            <Button title="Send" onPress={handlePress} disabled={isLoading} />
         </View>
     );
 };
@@ -124,20 +129,19 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 20,
         height: '100%',
+        justifyContent: 'space-between',
     },
     greetings: {
-        borderWidth: 1,
-        borderColor: 'black',
         padding: 10,
+    },
+    greetingsText: {
+        fontSize: 24,
     },
     messages: {
-        borderWidth: 1,
-        borderColor: 'black',
         padding: 10,
+        flex: 10,
     },
     form: {
-        borderWidth: 1,
-        borderColor: 'black',
         padding: 10,
     },
 });

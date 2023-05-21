@@ -2,11 +2,16 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 
 import { RouteNames } from '@constants/route-names';
+import { Person } from '@appTypes/person';
 
 export type StackNavigatorParamList = {
     [RouteNames.HOME]: undefined;
     [RouteNames.PNB]: undefined;
-    [RouteNames.CHAT]: undefined;
+    [RouteNames.CHAT]?:
+        | {
+              person?: Person;
+          }
+        | undefined;
 };
 
 export type NavigationProp = NativeStackNavigationProp<StackNavigatorParamList>;
