@@ -1,6 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
-
-export interface PersonType {
+interface PersonType {
     gender: 'male' | 'female';
     name: {
         title: string;
@@ -55,6 +53,7 @@ export interface PersonType {
         thumbnail: string;
     };
     nat: string;
+    uid?: string;
 }
 
 export class Person implements PersonType {
@@ -112,6 +111,7 @@ export class Person implements PersonType {
         thumbnail: string;
     };
     nat: string;
+    uid?: string;
 
     constructor(person: PersonType) {
         this.gender = person.gender;
@@ -126,6 +126,7 @@ export class Person implements PersonType {
         this.id = person.id;
         this.picture = person.picture;
         this.nat = person.nat;
+        this.uid = person?.uid || '';
     }
 
     toString() {

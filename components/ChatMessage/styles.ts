@@ -3,13 +3,15 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     root: {
         marginBottom: 10,
-        width: '100%',
+        width: '70%',
     },
     botRoot: {
         alignItems: 'flex-start',
+        alignSelf: 'flex-start',
     },
     humanRoot: {
         alignItems: 'flex-end',
+        alignSelf: 'flex-end',
     },
     content: {
         backgroundColor: '#cccccc',

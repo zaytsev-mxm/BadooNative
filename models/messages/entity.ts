@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-export interface MessageType {
+interface MessageType {
     fromUserId: string;
     toUserId: string;
     message: string;

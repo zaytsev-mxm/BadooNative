@@ -2,7 +2,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 
 import { RouteNames } from '@constants/route-names';
-import { Person } from '@appTypes/person';
+import { Person } from '@models/persons';
 
 export type StackNavigatorParamList = {
     [RouteNames.HOME]: undefined;

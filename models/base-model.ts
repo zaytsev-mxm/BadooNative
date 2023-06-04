@@ -1,15 +1,16 @@
 import {
     doc,
+    query,
+    where,
     setDoc,
-    getDoc,
     getDocs,
     collection,
-    QuerySnapshot,
-    DocumentSnapshot,
     FirestoreDataConverter,
 } from 'firebase/firestore';
 
 import { db } from '@utils/firebase';
+
+type Query = [string, any, any];
 
 class BaseModel<T> {
     name: string = '';
@@ -28,20 +29,16 @@ class BaseModel<T> {
 
     data: Record<string, any> = {};
 
-    get(): Promise<QuerySnapshot<T>>;
-    get(id: string): Promise<DocumentSnapshot<T>>;
-    get(id?: string) {
-        if (id === undefined) {
-            const collectionRef = collection(db, this.name).withConverter(
-                this.converter as FirestoreDataConverter<T>
-            );
-            return getDocs(collectionRef);
-        } else {
-            const docRef = doc(db, this.name, id).withConverter(
-                this.converter as FirestoreDataConverter<T>
-            );
-            return getDoc(docRef);
-        }
+    get(queries?: Query[]) {
+        const collectionRef = collection(db, this.name).withConverter(
+            this.converter as FirestoreDataConverter<T>
+        );
+        const conditions = queries
+            ? queries.map((query) => {
+                  return where(query[0], query[1], query[2]);
+              })
+            : [];
+        return getDocs(query(collectionRef, ...conditions));
     }
 }
 

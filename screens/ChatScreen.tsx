@@ -1,4 +1,4 @@
-import { FC, useState, useRef } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 import {
     Alert,
     Button,
@@ -12,8 +12,10 @@ import { useRoute } from '@react-navigation/native';
 import { ChatScreenRouteProp } from '@appTypes/router';
 import TextField from '@components/TextField';
 import ChatMessage from '@components/ChatMessage';
-import { HistoryEntry } from '@appTypes/chat';
+import { auth, getTimeStamp } from '@utils/firebase';
+import MessagesModel, { Message } from '@models/messages';
 import { OPEN_AI_API_KEY } from '@env';
+import Messages from '@models/messages';
 
 const OPTIONS = {
     method: 'POST',
@@ -27,27 +29,66 @@ const ChatScreen: FC = () => {
     const route = useRoute<ChatScreenRouteProp>();
     const [isLoading, setIsLoading] = useState(false);
     const [prompt, setPrompt] = useState('');
-    const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const [history, setHistory] = useState<Message[]>([]);
     const flatListRef = useRef<FlatList<any>>(null);
 
-    const updateMessages = (
-        message: string,
-        author: HistoryEntry['author']
-    ) => {
-        setHistory((currentHistory) => {
-            return [
-                ...currentHistory,
-                {
-                    author: author,
-                    message: message,
-                    time: new Date(),
-                },
-            ];
+    const userId = auth.currentUser?.uid;
+    const botId = route?.params?.person.uid;
+
+    useEffect(() => {
+        MessagesModel.getInstance()
+            .get([
+                ['fromUserId', '==', userId],
+                ['toUserId', '==', botId],
+            ])
+            .then((res) => {
+                return res.docs.map((doc) => doc.data());
+            })
+            .then((fromMe) => {
+                return MessagesModel.getInstance()
+                    .get([
+                        ['fromUserId', '==', botId],
+                        ['toUserId', '==', userId],
+                    ])
+                    .then((res) => {
+                        const toMe = res.docs.map((doc) => doc.data());
+                        const allMessages = [...fromMe, ...toMe].sort(
+                            (messageA, messageB) => {
+                                const messageATime =
+                                    messageA.dateTime?.toMillis() || 0;
+                                const messageBTime =
+                                    messageB.dateTime?.toMillis() || 0;
+                                return messageATime - messageBTime;
+                            }
+                        );
+                        return setHistory(allMessages);
+                    });
+            });
+    }, []);
+
+    const updateMessages = async (message: string, isFromMe: boolean) => {
+        const fromUserId = isFromMe ? userId : botId;
+        const toUserId = isFromMe ? botId : userId;
+        const messageItem = new Message({
+            fromUserId: fromUserId || '',
+            toUserId: toUserId || '',
+            message,
+            dateTime: getTimeStamp(),
         });
+
         try {
-            flatListRef?.current?.scrollToEnd();
-        } catch (_err) {
-            // mute it for now
+            await MessagesModel.getInstance().set(messageItem);
+        } catch (err) {
+            console.log('[maxzaytsev]: err: ', err);
+        } finally {
+            setHistory((currentHistory) => {
+                return [...currentHistory, messageItem];
+            });
+            try {
+                flatListRef?.current?.scrollToEnd();
+            } catch (_err) {
+                // mute it for now
+            }
         }
     };
 
@@ -65,7 +106,7 @@ const ChatScreen: FC = () => {
                 console.log('data: ', JSON.stringify(data));
                 const answer = data?.choices?.[0]?.message?.content || '';
                 if (answer) {
-                    updateMessages(answer, 'bot');
+                    updateMessages(answer, false);
                 }
             })
             .catch((err) => console.error(err));
@@ -75,27 +116,31 @@ const ChatScreen: FC = () => {
         setPrompt(text);
     };
 
-    const handlePress = () => {
+    const handlePressSendMessage = () => {
         if (!prompt) {
             Alert.alert('Empty message', 'Please enter a message');
-        } else {
-            setIsLoading(true);
-            setPrompt('');
-            updateMessages(prompt, 'human');
-            sendRequest(prompt).finally(() => {
-                setIsLoading(false);
-            });
+            return;
         }
+
+        setIsLoading(true);
+        setPrompt('');
+        updateMessages(prompt, true);
+        sendRequest(prompt).finally(() => {
+            setIsLoading(false);
+        });
     };
 
-    const renderChatMessage = (
-        historyEntry: ListRenderItemInfo<HistoryEntry>
-    ) => {
-        return <ChatMessage historyEntry={historyEntry.item} />;
+    const renderChatMessage = (historyEntry: ListRenderItemInfo<Message>) => {
+        return (
+            <ChatMessage
+                historyEntry={historyEntry.item}
+                isBot={historyEntry.item.fromUserId !== userId}
+            />
+        );
     };
 
-    const keyExtractor = (historyEntry: HistoryEntry) => {
-        return String(historyEntry.time.toLocaleTimeString());
+    const keyExtractor = (historyEntry: Message) => {
+        return String(historyEntry.dateTime?.toMillis());
     };
 
     return (
@@ -121,7 +166,7 @@ const ChatScreen: FC = () => {
                 />
                 <Button
                     title="Send"
-                    onPress={handlePress}
+                    onPress={handlePressSendMessage}
                     disabled={isLoading}
                 />
             </View>

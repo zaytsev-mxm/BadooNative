@@ -1,5 +1,5 @@
 import BaseModel from '@models/base-model';
-import { Person, PersonType } from './entity';
+import { Person } from './entity';
 import { converter } from './converter';
 
 class PersonsModel extends BaseModel<Person> {
@@ -18,6 +18,6 @@ class PersonsModel extends BaseModel<Person> {
     }
 }
 
-export { Person, PersonType };
+export { Person };
 
 export default PersonsModel;

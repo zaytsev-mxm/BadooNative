@@ -3,7 +3,6 @@ import { Person } from './entity';
 
 export const converter: FirestoreDataConverter<Person> = {
     toFirestore: (person) => {
-        console.log('person: ', person);
         return {
             gender: person.gender,
             name: person.name,
@@ -17,10 +16,12 @@ export const converter: FirestoreDataConverter<Person> = {
             id: person.id,
             picture: person.picture,
             nat: person.nat,
+            uid: person.uid,
         } as Person;
     },
     fromFirestore: (snapshot, options) => {
         const data = snapshot.data(options);
+
         return new Person({
             gender: data.gender,
             name: data.name,
@@ -34,6 +35,7 @@ export const converter: FirestoreDataConverter<Person> = {
             id: data.id,
             picture: data.picture,
             nat: data.nat,
+            uid: data.uid,
         });
     },
 };

@@ -1,5 +1,5 @@
 import BaseModel from '@models/base-model';
-import { Message, MessageType } from './entity';
+import { Message } from './entity';
 import { converter } from './converter';
 
 class MessagesModel extends BaseModel<Message> {
@@ -18,6 +18,6 @@ class MessagesModel extends BaseModel<Message> {
     }
 }
 
-export { Message, MessageType };
+export { Message };
 
 export default MessagesModel;

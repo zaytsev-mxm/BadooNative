@@ -1,37 +1,29 @@
 import { FC } from 'react';
 import { Text, View } from 'react-native';
 
-import { HistoryEntry } from '@appTypes/chat';
+import { Message } from '@models/messages';
 
 import styles from './styles';
 
 type Props = {
-    historyEntry: HistoryEntry;
+    historyEntry: Message;
+    isBot?: boolean;
 };
 
-const ChatMessage: FC<Props> = ({ historyEntry }) => {
+const ChatMessage: FC<Props> = ({ historyEntry, isBot }) => {
     return (
-        <View
-            style={[
-                styles.root,
-                historyEntry.author === 'bot'
-                    ? styles.botRoot
-                    : styles.humanRoot,
-            ]}
-        >
+        <View style={[styles.root, isBot ? styles.botRoot : styles.humanRoot]}>
             <View
                 style={[
                     styles.content,
-                    historyEntry.author === 'bot'
-                        ? styles.botContent
-                        : styles.humanContent,
+                    isBot ? styles.botContent : styles.humanContent,
                 ]}
             >
                 <Text style={[styles.text, styles.textMessage]}>
                     {historyEntry.message}
                 </Text>
                 <Text style={[styles.text, styles.textDate]}>
-                    ({historyEntry.time.toLocaleTimeString()})
+                    ({historyEntry.dateTime?.toDate().toLocaleTimeString()})
                 </Text>
             </View>
         </View>

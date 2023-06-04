@@ -17,7 +17,10 @@ const PeopleNearbyScreen = () => {
             .then((persons) => {
                 setPeople(
                     persons.docs.map((doc) => {
-                        return doc.data();
+                        return {
+                            ...doc.data(),
+                            uid: doc.id,
+                        };
                     })
                 );
             });
