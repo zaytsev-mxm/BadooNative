@@ -11,7 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 import TextField from '@components/TextField';
 
 import { signInUser, signUpUser } from '@utils/firebase';
-import Messages from '@models/messages';
+import MessagesModel from '@models/messages';
 
 const HomeScreen = () => {
     const [email, setEmail] = useState('test@test.com');
@@ -53,8 +53,8 @@ const HomeScreen = () => {
     };
 
     const handlePromise = async () => {
-        const mm = await Messages.getInstance().get();
-        console.log('mm: ', mm);
+        const mm = await MessagesModel.getInstance().get();
+        console.log('mm: ', mm.docs[0].data());
     };
 
     return (

@@ -1,45 +1,35 @@
-import { doc, setDoc, collection, query, getDocs } from 'firebase/firestore';
+import {
+    doc,
+    setDoc,
+    collection,
+    getDocs,
+    FirestoreDataConverter,
+} from 'firebase/firestore';
 
 import { db } from '@utils/firebase';
 
-interface IBaseModel<Entity> {
-    set(entity: Entity | Entity[]): Promise<any>;
-    get(id?: string): Promise<any | null>;
-}
+class BaseModel<T> {
+    name: string = '';
 
-type EntityBase = { [field: string]: any };
-
-class BaseModel<Entity extends EntityBase> implements IBaseModel<Entity> {
-    name: string = 'model';
-
-    private static instance: BaseModel<any> | null = null;
-
-    static makeGetInstance(ModelClass: typeof BaseModel<EntityBase>) {
-        return () => {
-            if (!ModelClass.instance) {
-                ModelClass.instance = new ModelClass(ModelClass.name);
-            }
-
-            return ModelClass.instance;
-        };
-    }
+    converter: FirestoreDataConverter<T> | null = null;
 
     constructor(name: string) {
         this.name = name;
     }
 
-    set(entity: Entity[] | Entity) {
-        // Create a new document reference
-        const messageRef = doc(db, this.name);
+    set(entity: T) {
+        const ref = doc(db, this.name).withConverter(
+            this.converter as FirestoreDataConverter<T>
+        );
 
-        // Write data to the new document
-        return setDoc(messageRef, entity);
+        return setDoc(ref, entity);
     }
 
     get(id?: string) {
-        const q = query(collection(db, this.name));
-
-        return getDocs(q);
+        const ref = collection(db, this.name).withConverter(
+            this.converter as FirestoreDataConverter<T>
+        );
+        return getDocs(ref);
     }
 }
 
