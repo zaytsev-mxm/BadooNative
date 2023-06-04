@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, FirebaseOptions } from 'firebase/app';
-import { getFirestore, getDocs, collection } from 'firebase/firestore';
+import { getFirestore, Timestamp } from 'firebase/firestore';
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -37,4 +37,8 @@ const signOutUser = () => {
     return auth.signOut();
 };
 
-export { app, auth, db, signUpUser, signInUser, signOutUser };
+const getTimeStamp = () => {
+    return Timestamp.fromDate(new Date());
+};
+
+export { app, auth, db, signUpUser, signInUser, signOutUser, getTimeStamp };

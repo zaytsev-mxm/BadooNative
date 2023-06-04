@@ -1,8 +1,9 @@
 import {
     doc,
     setDoc,
-    collection,
+    getDoc,
     getDocs,
+    collection,
     FirestoreDataConverter,
 } from 'firebase/firestore';
 
@@ -14,18 +15,27 @@ class BaseModel<T> {
     converter: FirestoreDataConverter<T> | null = null;
 
     set(entity: T) {
-        const ref = doc(db, this.name).withConverter(
+        const collectionRef = collection(db, this.name);
+        const docRef = doc(collectionRef).withConverter(
             this.converter as FirestoreDataConverter<T>
         );
+        const documentUuid = docRef.id;
 
-        return setDoc(ref, entity);
+        return setDoc(docRef, { ...entity, uuid: documentUuid });
     }
 
-    get(id?: string) {
-        const ref = collection(db, this.name).withConverter(
+    get(id: string) {
+        const docRef = doc(db, this.name, id).withConverter(
             this.converter as FirestoreDataConverter<T>
         );
-        return getDocs(ref);
+        return getDoc(docRef);
+    }
+
+    getAll() {
+        const collectionRef = collection(db, this.name).withConverter(
+            this.converter as FirestoreDataConverter<T>
+        );
+        return getDocs(collectionRef);
     }
 }
 

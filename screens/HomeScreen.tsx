@@ -10,8 +10,9 @@ import { StatusBar } from 'expo-status-bar';
 
 import TextField from '@components/TextField';
 
-import { signInUser, signUpUser } from '@utils/firebase';
+import { signInUser, signUpUser, getTimeStamp } from '@utils/firebase';
 import MessagesModel from '@models/messages';
+import { Message } from '@models/messages/entity';
 
 const HomeScreen = () => {
     const [email, setEmail] = useState('test@test.com');
@@ -55,8 +56,21 @@ const HomeScreen = () => {
     const handlePromise = async () => {
         const messagesModel = MessagesModel.getInstance();
         console.log('messagesModel: ', messagesModel);
-        const mm = await messagesModel.get();
-        console.log('mm: ', mm.docs[0].data());
+        const mm = await messagesModel.getAll();
+        console.log('mm: ', mm.docs);
+
+        await messagesModel.set(
+            new Message({
+                message: 'hello darkness my old friend',
+                fromUserId: String(mm.size + 1),
+                toUserId: '222',
+                dateTime: getTimeStamp(),
+            })
+        );
+
+        const lastItem = await messagesModel.get(mm.docs[mm.size - 1].id);
+
+        console.log('lastItem: ', lastItem);
     };
 
     return (
