@@ -25,7 +25,7 @@ const Entry = () => {
                     component={PeopleNearbyScreen}
                     options={{
                         title: `Hello, ${currentUser?.email}!`,
-                        headerBackTitleVisible: false,
+                        headerBackVisible: false,
                     }}
                 />
                 <Stack.Screen
