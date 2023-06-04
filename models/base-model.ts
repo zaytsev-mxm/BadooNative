@@ -4,6 +4,8 @@ import {
     getDoc,
     getDocs,
     collection,
+    QuerySnapshot,
+    DocumentSnapshot,
     FirestoreDataConverter,
 } from 'firebase/firestore';
 
@@ -24,18 +26,22 @@ class BaseModel<T> {
         return setDoc(docRef, { ...entity, uuid: documentUuid });
     }
 
-    get(id: string) {
-        const docRef = doc(db, this.name, id).withConverter(
-            this.converter as FirestoreDataConverter<T>
-        );
-        return getDoc(docRef);
-    }
+    data: Record<string, any> = {};
 
-    getAll() {
-        const collectionRef = collection(db, this.name).withConverter(
-            this.converter as FirestoreDataConverter<T>
-        );
-        return getDocs(collectionRef);
+    get(): Promise<QuerySnapshot<T>>;
+    get(id: string): Promise<DocumentSnapshot<T>>;
+    get(id?: string) {
+        if (id === undefined) {
+            const collectionRef = collection(db, this.name).withConverter(
+                this.converter as FirestoreDataConverter<T>
+            );
+            return getDocs(collectionRef);
+        } else {
+            const docRef = doc(db, this.name, id).withConverter(
+                this.converter as FirestoreDataConverter<T>
+            );
+            return getDoc(docRef);
+        }
     }
 }
 

@@ -56,7 +56,7 @@ const HomeScreen = () => {
     const handlePromise = async () => {
         const messagesModel = MessagesModel.getInstance();
         console.log('messagesModel: ', messagesModel);
-        const mm = await messagesModel.getAll();
+        const mm = await messagesModel.get();
         console.log('mm: ', mm.docs);
 
         await messagesModel.set(
