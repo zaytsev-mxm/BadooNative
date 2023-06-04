@@ -53,7 +53,9 @@ const HomeScreen = () => {
     };
 
     const handlePromise = async () => {
-        const mm = await MessagesModel.getInstance().get();
+        const messagesModel = MessagesModel.getInstance();
+        console.log('messagesModel: ', messagesModel);
+        const mm = await messagesModel.get();
         console.log('mm: ', mm.docs[0].data());
     };
 

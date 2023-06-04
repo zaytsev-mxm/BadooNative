@@ -13,10 +13,6 @@ class BaseModel<T> {
 
     converter: FirestoreDataConverter<T> | null = null;
 
-    constructor(name: string) {
-        this.name = name;
-    }
-
     set(entity: T) {
         const ref = doc(db, this.name).withConverter(
             this.converter as FirestoreDataConverter<T>
