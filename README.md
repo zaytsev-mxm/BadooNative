@@ -9,6 +9,9 @@ If you want to see a live demo – see this [video] or you can install this [apk
 ## How to use
 To log in you can either register as a new user, or simply use login "test@test.com" and password "testtest"
 
+When you write messages to someone, they are saved in Firebase, so you can see them 
+again even after logging out and logging in back.
+
 ## TODO
 
 - **[DONE!!!]** Fix navigation issues (at the moment a logged in user can get to the Login screen and get stuck there)
@@ -23,4 +26,4 @@ To log in you can either register as a new user, or simply use login "test@test.
 - OpenAI API
 
 [video]: https://drive.google.com/file/d/1Dme9NN9uK6q-U0c5a0cA0zCM9Dw15t-g/view?usp=sharing
-[apk]: https://drive.google.com/file/d/1ItfnguXk1J4FqCGIO52-v4xwjBrtuGEJ/view?usp=sharing
+[apk]: https://drive.google.com/file/d/1-Dof4cfofGI_VXm-2ACWuBoW2tA_Iabx/view?usp=sharing
