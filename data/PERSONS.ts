@@ -1,6 +1,6 @@
-import { Person } from '@appTypes/person';
+import { PersonType } from '@models/persons/entity';
 
-export const PERSONS: Person[] = [
+export const PERSONS: PersonType[] = [
     {
         gender: 'male',
         name: { title: 'Mr', first: 'علی', last: 'كامياران' },

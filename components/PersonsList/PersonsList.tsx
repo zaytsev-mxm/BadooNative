@@ -1,16 +1,12 @@
 import { FC, useState } from 'react';
-import {
-    FlatList,
-    View,
-    ListRenderItemInfo,
-    Modal,
-    Pressable,
-} from 'react-native';
-import { Person } from '@appTypes/person';
+import { FlatList, View, ListRenderItemInfo, Modal } from 'react-native';
+
 import PersonThumbnail from '@components/PersonThumbnail';
+import PersonCard from '@components/PersonCard';
+
+import { Person } from '@models/persons';
 
 import styles from './styles';
-import PersonCard from '@components/PersonCard';
 
 type Props = {
     people: Person[];
@@ -37,17 +33,17 @@ const PersonsList: FC<Props> = (props) => {
         return (
             <PersonThumbnail
                 picture={person.item.picture?.large || ''}
-                name={person.item.name.first}
+                name={person.item.name?.first}
                 age={String(person.item.dob?.age)}
                 location={person.item.location?.city || ''}
-                isOnline={Boolean(person.item.online)}
+                isOnline={false}
                 onPersonSelect={handlePress(person.item)}
             />
         );
     };
 
     const keyExtractor = (person: Person, i: number) => {
-        return String(`${person.id.value}${i}`);
+        return String(`${person?.id?.value}${i}`);
     };
 
     const renderModal = () => {

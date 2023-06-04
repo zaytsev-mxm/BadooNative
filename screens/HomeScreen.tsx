@@ -10,9 +10,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import TextField from '@components/TextField';
 
-import { signInUser, signUpUser, getTimeStamp } from '@utils/firebase';
-import MessagesModel from '@models/messages';
-import { Message } from '@models/messages/entity';
+import { signInUser, signUpUser } from '@utils/firebase';
 
 const HomeScreen = () => {
     const [email, setEmail] = useState('test@test.com');
@@ -53,26 +51,6 @@ const HomeScreen = () => {
         }
     };
 
-    const handlePromise = async () => {
-        const messagesModel = MessagesModel.getInstance();
-        console.log('messagesModel: ', messagesModel);
-        const mm = await messagesModel.get();
-        console.log('mm: ', mm.docs);
-
-        await messagesModel.set(
-            new Message({
-                message: 'hello darkness my old friend',
-                fromUserId: String(mm.size + 1),
-                toUserId: '222',
-                dateTime: getTimeStamp(),
-            })
-        );
-
-        const lastItem = await messagesModel.get(mm.docs[mm.size - 1].id);
-
-        console.log('lastItem: ', lastItem);
-    };
-
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <View style={styles.field}>
@@ -105,9 +83,6 @@ const HomeScreen = () => {
                     onPress={handleSignup}
                     disabled={isLoading}
                 />
-            </View>
-            <View style={styles.button}>
-                <Button title="Promise" onPress={handlePromise} />
             </View>
             <StatusBar style="auto" />
         </KeyboardAvoidingView>
