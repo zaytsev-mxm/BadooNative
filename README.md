@@ -11,9 +11,9 @@ To log in you can either register as a new user, or simply use login "test@test.
 
 ## TODO
 
-- Fix navigation issues (at the moment a logged in user can get to the Login screen and get stuck there)
-- Store the history of user's interactions in Firebase
-- Add more nice-looking custom UI components
+- **[DONE!!!]** Fix navigation issues (at the moment a logged in user can get to the Login screen and get stuck there)
+- **[DONE!!!]** Store the history of user's interactions in Firebase
+- *[IN PROGRESS...]* Add more nice-looking custom UI components
 
 ## Technologies and Techniques Used
 
